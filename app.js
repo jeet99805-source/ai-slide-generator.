@@ -18,7 +18,7 @@ Return the result in JSON format like this:
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer YOUR_OPENROUTER_API_KEY"
+      "Authorization": "Bearer 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"
     },
     body: JSON.stringify({
       model: "mistralai/mistral-7b-instruct",
