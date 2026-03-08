@@ -1,51 +1,56 @@
-async function generateSlides() {
+async function generateSlides(){
 
   const topic = document.getElementById("topic").value;
 
-  const prompt = `Create 5 presentation slides about ${topic}.
-For each slide include:
-- Slide title
+  const prompt = `
+Create 5 presentation slides about ${topic}.
+
+For each slide return:
+- title
 - 3 bullet points
 
-Return the result in JSON format like this:
+Return ONLY JSON in this format:
+
 {
  "slides":[
-   {"title":"", "points":["","",""]}
+   {"title":"Slide title","points":["point1","point2","point3"]}
  ]
-}`;
+}
+`;
 
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer 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"
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer YOUR_OPENROUTER_API_KEY"
     },
-    body: JSON.stringify({
-      model: "mistralai/mistral-7b-instruct",
-      messages: [
-        { role: "user", content: prompt }
-      ]
+    body:JSON.stringify({
+      model:"mistralai/mistral-7b-instruct",
+      messages:[{role:"user",content:prompt}]
     })
   });
 
   const data = await response.json();
+
   const text = data.choices[0].message.content;
 
   const slides = JSON.parse(text).slides;
 
   const container = document.getElementById("slides");
-  container.innerHTML = "";
 
-  slides.forEach(slide => {
+  container.innerHTML="";
 
-    const div = document.createElement("div");
+  slides.forEach(slide=>{
 
-    div.innerHTML = `
+    const div=document.createElement("div");
+
+    div.className="slide";
+
+    div.innerHTML=`
       <h3>${slide.title}</h3>
       <ul>
-        ${slide.points.map(p => `<li>${p}</li>`).join("")}
+        ${slide.points.map(p=>`<li>${p}</li>`).join("")}
       </ul>
-      <hr>
     `;
 
     container.appendChild(div);
